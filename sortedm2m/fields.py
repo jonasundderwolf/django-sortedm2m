@@ -52,10 +52,13 @@ def create_sorted_many_related_manager(superclass, rel, *args, **kwargs):
                     queryset = super(SortedRelatedManager, self).get_query_set()
                 else:
                     queryset = super(SortedRelatedManager, self).get_queryset()
-                return queryset.extra(order_by=['%s.%s' % (
-                    rel.through._meta.db_table,
-                    rel.through._sort_field_name,
-                )])
+                return queryset.extra(
+                    tables=[rel.through._meta.db_table],
+                    order_by=['%s.%s' % (
+                        rel.through._meta.db_table,
+                        rel.through._sort_field_name,
+                    )]
+                )
 
         get_query_set = get_queryset
 
